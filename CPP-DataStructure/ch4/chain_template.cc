@@ -6,6 +6,7 @@
 using namespace std;
 template <class T> class Chain;
 template <class T> class ChainNode;
+template <class T> class CircularList;
 
 template <class T>
 class Chain {
@@ -95,6 +96,7 @@ private:
 template <class T>
 class ChainNode {
 friend class Chain<T>;
+friend class CircularList<T>;
 public:
   ChainNode(T d, ChainNode<T>* l = NULL):
   data(d), link(l) { }
