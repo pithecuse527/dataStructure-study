@@ -12,7 +12,7 @@ class Chain {
 public:
   Chain(): first(NULL), last(NULL) {}
 
-  // inherited class
+  // inherited class iterator
   class ChainIterator {
   friend class Chain<T>;
   public:
@@ -39,27 +39,31 @@ public:
     ChainNode<T>* current;
   }; // end inherit class
 
+  // insert a new node right afte the last
   void InsertBack(const T& e)
   {
-    if(first)
+    if(first) // if first exist, just add to the last
     {
       last->link = new ChainNode<T>(e);
       last = last -> link;
     }
-    else first = last = new ChainNode<T>(e);
+    else first = last = new ChainNode<T>(e); // if not, first and last will be a new node
   }
 
+  // concatenate two chain
   void Concatenate(Chain<T>& b)
   {
+    // the given chain parameter will be attach to *this
     if(first) {last -> link = b.first; last = b.last;}
     else {first = b.first; last = b.last;}
     b.last = b.first = NULL;  // b is now the part of *this
   }
 
+  // print the node data with ChainIterator
   void PrintNodes()
   {
     ChainIterator iter(first);
-    while(iter.current != NULL)
+    while(iter.current != NULL) // while iterator still on the loop
     {
       cout << (iter.current)->data << " ";
       iter++;
@@ -67,17 +71,19 @@ public:
     cout << endl;
   }
 
+  // reverse order of the chain with ChainIterator
   void Reverse()
   {
     ChainIterator iter(first);
     ChainIterator iterPrev;
 
-    while(iter++ != NULL)
+    while(iter.current != NULL) // while iterator still on the loop
     {
       iterPrev = iter++;
       iter.current -> link = iterPrev.current;
+      ++iter;
     }
-    first = iterPrev.current;
+    first = iterPrev.current; // last will be the first of this chain
   }
 
 private:
@@ -85,7 +91,7 @@ private:
   ChainNode<T>* last;
 };
 
-
+// the class ChainNode which will be a node of the Chain
 template <class T>
 class ChainNode {
 friend class Chain<T>;
