@@ -26,6 +26,7 @@ public:
   void Preorder(TreeNode<T> *currentNode);
   void Postorder();
   void Postorder(TreeNode<T> *currentNode);
+  int NodeCounter(TreeNode<T> *currentNode);
   class InorderIterator;
 
 private:

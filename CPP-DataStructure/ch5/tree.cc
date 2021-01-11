@@ -96,6 +96,18 @@ private:
   TreeNode<T> *currentNode;
 };
 
+template <class T>
+int Tree<T>::NodeCounter(TreeNode<T> *currentNode)
+{
+  int sum = 0;
+  if(currentNode) {
+    sum += NodeCounter(currentNode->leftChild);
+    sum += 1;
+    sum += NodeCounter(currentNode->rightChild);
+  }
+  return sum;
+}
+
 // just a temporary function to solve the linking problem with the template
 // no need to call this
 void TempFunc()
@@ -105,4 +117,5 @@ void TempFunc()
   temp2.Inorder();
   temp2.Preorder();
   temp2.Postorder();
+  temp2.NodeCounter(&temp1);
 }
