@@ -55,6 +55,25 @@ public:
       PrintList(lst, 10); // check the list every time
     }
   }
+
+  // sort lst[left:right] as an ascending order
+  // lst[left] is a temp pivot
+  void QuickSort(T *lst, const int left, const int right)
+  {
+    if(left < right){ // base case
+      int i = left, j = right+1;
+      int pivot = lst[left];  // pivot will be moved to appropriate location
+      do{
+        do i++; while(lst[i]<pivot);  // i moves to right
+        do j--; while(lst[j]>pivot);  // j moves to left
+        if(i<j) std::swap(lst[i], lst[j]);  // left subset has smaller values and right subset has bigger values
+      } while(i<j);
+      std::swap(lst[left], lst[j]); // pivot(lst[left]) should be moved to the middle of two sublist
+
+      this->QuickSort(lst, left, j-1);  // recursion for the left subset
+      this->QuickSort(lst, j+1, right); // recursion for the right subset
+    }
+  }
 };
 
 int main()
@@ -62,16 +81,23 @@ int main()
   SortMachine<int> *tmp_machine = new SortMachine<int>();
   int *unsorted_lst = new int[10];
   for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
-  PrintList(unsorted_lst, 10);
-  tmp_machine->BubbleSort(unsorted_lst, 10);
-  cout << endl;
+  // PrintList(unsorted_lst, 10);
+  // tmp_machine->BubbleSort(unsorted_lst, 10);
+  // cout << endl;
+  //
+  // for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
+  // tmp_machine->SelectionSort(unsorted_lst, 10);
+  // cout << endl;
+  //
+  // for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
+  // tmp_machine->InsertionSort(unsorted_lst, 10);
+  // cout << endl;
 
-  for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
-  tmp_machine->SelectionSort(unsorted_lst, 10);
+  for(int i=0; i<9; i++) unsorted_lst[i] = (rand() % 35) + 1;
+  unsorted_lst[9] = 37;
+  tmp_machine->QuickSort(unsorted_lst, 0, 9);
+  PrintList(unsorted_lst, 9);
   cout << endl;
-
-  for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
-  tmp_machine->InsertionSort(unsorted_lst, 10);
 
   delete [] unsorted_lst;
   return 0;
