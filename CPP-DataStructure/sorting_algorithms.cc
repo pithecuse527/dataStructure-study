@@ -74,6 +74,18 @@ public:
       this->QuickSort(lst, j+1, right); // recursion for the right subset
     }
   }
+
+  // binary search with O(logn)
+  // give a location of e
+  // lst should be sorted
+  int BinarySearch(T *lst, const T e, int left, int right)
+  {
+    if(left > right) return -1; // base case1
+    int middle = (left+right) / 2;
+    if(lst[middle] < e) return BinarySearch(lst, e, middle+1, right); // use right sublist
+    else if(lst[middle] > e) return BinarySearch(lst, e, left, middle-1); // use left sublist
+    else return middle; // base case2
+  }
 };
 
 int main()
@@ -98,6 +110,7 @@ int main()
   tmp_machine->QuickSort(unsorted_lst, 0, 9);
   PrintList(unsorted_lst, 9);
   cout << endl;
+  cout << tmp_machine->BinarySearch(unsorted_lst, 37, 0, 9) << endl;
 
   delete [] unsorted_lst;
   return 0;
