@@ -46,13 +46,16 @@ public:
   }
 
   // you know how this works if, and only if, you know how selection sort works (vice versa)
-  void InsertionSort(T* lst, int size){
-    int tmp;
-    int swap_loc;
-    for(int i=0; i<size-1; i++){  // subset boundary
-      for(int j=i+1; j>0 && lst[j-1] > lst[j]; j--) // find the location for lst[i+1] by swap
-        SWAP(lst[j-1], lst[j], tmp);
-      PrintList(lst, 10); // check the list every time
+  void insertionsort(T* lst, const int n)
+  {
+    int key, i, j;
+
+    for(i=1; i<n; i++){
+      key = lst[i];
+      for(j=i-1; j>=0 && lst[j] > key; j--){
+        lst[j+1] = lst[j];
+      }
+      lst[j+1] = key;
     }
   }
 
@@ -86,6 +89,64 @@ public:
     else if(lst[middle] > e) return BinarySearch(lst, e, left, middle-1); // use left sublist
     else return middle; // base case2
   }
+
+
+  // Merge function which will be used after division
+  void Merge(T* lst, int left, int mid, int right){
+    int i,j,k;
+    i = left;  j = mid+1;  k = left;
+    int *slst = new int[right-left+1];  // tep. list to save sorted elements
+
+    while(i<=mid && j<=right){  // pick some elements in a sorted way
+      if(lst[i] <= lst[j]) slst[k++] = lst[i++];
+      else slst[k++] = lst[j++];
+    }
+
+    // leftovers
+    for(int l=i; l<=mid; l++) slst[k++] = lst[l];
+    for(int l=j; l<=right; l++) slst[k++] = lst[l];
+
+    // save the sorted list's elements to the given unsorted list
+    for(int l=left; l<=right; l++) lst[l] = slst[l];
+  }
+
+  // Driver
+  // Divide until the length of lst is 1
+  void MergeSort(T* lst, int left, int right){
+    int mid;
+    if(left < right){
+      mid = (left+right)/2;
+      MergeSort(lst, left, mid);    // divide left part
+      MergeSort(lst, mid+1, right); // divide right part
+      Merge(lst, left, mid, right); // and merge them
+    }
+  }
+
+  // insertion sort for shell sort
+  // use gap to sort the part of unsorted list
+  void ShellInsertionSort(T* lst, int left, int right, int gap){
+    int i, j, key;
+
+    for(i=left+gap; i<=right; i += gap){
+      key = lst[i];
+      for(j=i-gap; j>=left && key<lst[j]; j -= gap){
+        lst[j+gap] = lst[j];
+      }
+      lst[j+gap] = key;
+    }
+  }
+
+  // Driver
+  // invoke the insortion sort with some gap
+  void ShellSort(T* lst, int n){
+    for(int gap=n/2; gap>0; gap /=2){
+      if((gap%2) == 0) gap++;
+      for(int i=0; i<gap; i++){
+        ShellInsertionSort(lst, i, n-1, gap);
+      }
+    }
+  }
+
 };
 
 int main()
@@ -104,13 +165,11 @@ int main()
   // for(int i=0; i<10; i++) unsorted_lst[i] = (rand() % 35) + 1;
   // tmp_machine->InsertionSort(unsorted_lst, 10);
   // cout << endl;
-
-  for(int i=0; i<9; i++) unsorted_lst[i] = (rand() % 35) + 1;
-  unsorted_lst[9] = 37;
-  tmp_machine->QuickSort(unsorted_lst, 0, 9);
-  PrintList(unsorted_lst, 9);
+  PrintList(unsorted_lst, 10);
+  tmp_machine->ShellSort(unsorted_lst, 10);
+  PrintList(unsorted_lst, 10);
   cout << endl;
-  cout << tmp_machine->BinarySearch(unsorted_lst, 37, 0, 9) << endl;
+  //cout << tmp_machine->BinarySearch(unsorted_lst, 37, 0, 9) << endl;
 
   delete [] unsorted_lst;
   return 0;
@@ -118,6 +177,6 @@ int main()
 
 template <class T>
 void PrintList(T* lst, int size){
-  for(int i=0; i<10; i++) cout << lst[i] << " ";
+  for(int i=0; i<size; i++) cout << lst[i] << " ";
   cout << endl;
 }
